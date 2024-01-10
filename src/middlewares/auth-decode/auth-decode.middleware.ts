@@ -10,6 +10,9 @@ export class AuthDecodeMiddleware implements NestMiddleware {
 
   async use(req: any, res: any, next: () => void) {
     const token = req.headers['authorization'];
+    if (!token) {
+      next();
+    }
 
     if (token) {
       this.httpService
@@ -23,10 +26,9 @@ export class AuthDecodeMiddleware implements NestMiddleware {
         )
         .subscribe(({ data }: any) => {
           const { id } = data;
-          req.user_id = id;
+          req.headers.user_id = id;
+          next();
         });
     }
-
-    next();
   }
 }
