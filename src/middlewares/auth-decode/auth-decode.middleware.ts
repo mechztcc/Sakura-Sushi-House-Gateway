@@ -1,7 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { AxiosError } from 'axios';
-import { Options, createProxyMiddleware } from 'http-proxy-middleware';
 import { catchError } from 'rxjs';
 
 @Injectable()
