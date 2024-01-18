@@ -1,9 +1,16 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Options, createProxyMiddleware } from 'http-proxy-middleware';
+import {
+  Options,
+  createProxyMiddleware,
+  fixRequestBody,
+} from 'http-proxy-middleware';
+import { json } from 'body-parser';
 
 @Injectable()
 export class ProxyMiddleware implements NestMiddleware {
   use(req: any, res: any, next: () => void) {
+    const jsonParseMiddleware = json();
+
     const proxyOptionsUsers: Options = {
       target: 'http://localhost:3001/',
       changeOrigin: true,
@@ -19,13 +26,11 @@ export class ProxyMiddleware implements NestMiddleware {
     const proxyOptionsAuth: Options = {
       target: 'http://localhost:3001/',
       changeOrigin: true,
-      headers: {
-        'Content-Type': 'application/json',
-      },
       secure: false,
       pathRewrite: {
         '^/auth': '/auth',
       },
+      onProxyReq: fixRequestBody
     };
 
     const proxyOptionsProducts: Options = {
@@ -38,6 +43,7 @@ export class ProxyMiddleware implements NestMiddleware {
       pathRewrite: {
         '^/products': '/products',
       },
+      onProxyReq: fixRequestBody
     };
     const proxyOptionsCategories: Options = {
       target: 'http://localhost:3002/',
@@ -51,22 +57,9 @@ export class ProxyMiddleware implements NestMiddleware {
       },
     };
 
-    const proxyOptionsOrders: Options = {
-      target: 'http://localhost:3004/',
-      changeOrigin: true,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      secure: false,
-      pathRewrite: {
-        '^/orders': '/orders',
-      },
-    };
-
     const proxyUsers = createProxyMiddleware(proxyOptionsUsers);
     const proxyAuth = createProxyMiddleware(proxyOptionsAuth);
     const proxyProducts = createProxyMiddleware(proxyOptionsProducts);
-    const proxyOrders = createProxyMiddleware(proxyOptionsOrders);
     const proxyCategories = createProxyMiddleware(proxyOptionsCategories);
 
     if (req.url.startsWith('/users')) {
@@ -80,11 +73,6 @@ export class ProxyMiddleware implements NestMiddleware {
     if (req.url.startsWith('/products')) {
       return proxyProducts(req, res, next);
     }
-
-    if (req.url.startsWith('/orders')) {
-      return proxyOrders(req, res, next);
-    }
-
     if (req.url.startsWith('/categories')) {
       return proxyCategories(req, res, next);
     }
