@@ -11,7 +11,7 @@ export class SendEventService {
   ) {}
 
   execute({ message }: IEventPayload) {
-    this.client.emit('create_order', JSON.stringify(message));
+    this.client.emit('create_order', message);
   }
 }
  
