@@ -30,7 +30,7 @@ export class ProxyMiddleware implements NestMiddleware {
       pathRewrite: {
         '^/auth': '/auth',
       },
-      onProxyReq: fixRequestBody
+      onProxyReq: fixRequestBody,
     };
 
     const proxyOptionsProducts: Options = {
@@ -43,8 +43,21 @@ export class ProxyMiddleware implements NestMiddleware {
       pathRewrite: {
         '^/products': '/products',
       },
-      onProxyReq: fixRequestBody
+      onProxyReq: fixRequestBody,
     };
+
+    // const proxyOptionsOrders: Options = {
+    //   target: 'http://localhost:3004/',
+    //   changeOrigin: true,
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   secure: false,
+    //   pathRewrite: {
+    //     '^/orders-proxy': '/orders',
+    //   },
+    // };
+
     const proxyOptionsCategories: Options = {
       target: 'http://localhost:3002/',
       changeOrigin: true,
@@ -61,6 +74,7 @@ export class ProxyMiddleware implements NestMiddleware {
     const proxyAuth = createProxyMiddleware(proxyOptionsAuth);
     const proxyProducts = createProxyMiddleware(proxyOptionsProducts);
     const proxyCategories = createProxyMiddleware(proxyOptionsCategories);
+    // const proxyOrders = createProxyMiddleware(proxyOptionsOrders);
 
     if (req.url.startsWith('/users')) {
       return proxyUsers(req, res, next);

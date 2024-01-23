@@ -5,13 +5,14 @@ interface IEventPayload {
   message: string;
   queue: string;
 }
+
 @Injectable()
-export class SendEventService {
+export class EmitEventService {
   constructor(
     @Inject('RABBITMQ_ORDERS') private readonly client: ClientProxy,
   ) {}
 
   async execute({ message, queue }: IEventPayload) {
-    return this.client.send(queue, message);
+    return this.client.emit(queue, message);
   }
 }

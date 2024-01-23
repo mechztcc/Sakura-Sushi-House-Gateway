@@ -3,9 +3,10 @@ import { ProduceLogsService } from './producer-logs/producer-logs.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ProducerOrdersService } from './producer-orders/producer-orders.service';
 import { SendEventService } from './send-event/send-event.service';
+import { EmitEventService } from './emit-event/emit-event.service';
 
 @Module({
-  providers: [ProduceLogsService, ProducerOrdersService, SendEventService],
+  providers: [ProduceLogsService, ProducerOrdersService, SendEventService, EmitEventService],
   imports: [
     ClientsModule.register([
       {
@@ -32,7 +33,7 @@ import { SendEventService } from './send-event/send-event.service';
       },
     ]),
   ],
-  exports: [SendEventService]
+  exports: [SendEventService, EmitEventService]
 })
 export class RabbitmqModule implements OnModuleInit {
   constructor(private readonly producer: ProducerOrdersService) {}
