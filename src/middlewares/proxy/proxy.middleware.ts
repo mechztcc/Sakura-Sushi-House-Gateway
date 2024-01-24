@@ -68,6 +68,7 @@ export class ProxyMiddleware implements NestMiddleware {
       pathRewrite: {
         '^/categories': '/categories',
       },
+      onProxyReq: fixRequestBody,
     };
 
     const proxyUsers = createProxyMiddleware(proxyOptionsUsers);

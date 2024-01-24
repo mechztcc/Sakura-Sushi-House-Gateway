@@ -23,11 +23,10 @@ export class AppController {
       ...body,
       user_id,
     };
-    this.emitEventRBQService.execute({
+    return this.emitEventRBQService.execute({
       queue: 'create_order',
       message: payload,
     });
-    return 'payload';
   }
 
   @Get('orders')

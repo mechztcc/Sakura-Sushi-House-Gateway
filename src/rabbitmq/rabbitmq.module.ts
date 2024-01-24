@@ -6,7 +6,12 @@ import { SendEventService } from './send-event/send-event.service';
 import { EmitEventService } from './emit-event/emit-event.service';
 
 @Module({
-  providers: [ProduceLogsService, ProducerOrdersService, SendEventService, EmitEventService],
+  providers: [
+    ProduceLogsService,
+    ProducerOrdersService,
+    SendEventService,
+    EmitEventService,
+  ],
   imports: [
     ClientsModule.register([
       {
@@ -14,7 +19,7 @@ import { EmitEventService } from './emit-event/emit-event.service';
         transport: Transport.RMQ,
         options: {
           urls: [
-            `amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@localhost:5672`,
+            `amqps://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@${process.env.RABBITMQ_DEFAULT_HOST}/${process.env.RABBITMQ_DEFAULT_USER}`,
           ],
           queue: 'logs_queue',
         },
@@ -26,14 +31,14 @@ import { EmitEventService } from './emit-event/emit-event.service';
         transport: Transport.RMQ,
         options: {
           urls: [
-            `amqp://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@localhost:5672`,
+            `amqps://${process.env.RABBITMQ_DEFAULT_USER}:${process.env.RABBITMQ_DEFAULT_PASS}@${process.env.RABBITMQ_DEFAULT_HOST}/${process.env.RABBITMQ_DEFAULT_USER}`,
           ],
           queue: 'orders_queue',
         },
       },
     ]),
   ],
-  exports: [SendEventService, EmitEventService]
+  exports: [SendEventService, EmitEventService],
 })
 export class RabbitmqModule implements OnModuleInit {
   constructor(private readonly producer: ProducerOrdersService) {}

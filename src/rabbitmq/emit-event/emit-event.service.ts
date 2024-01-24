@@ -13,6 +13,6 @@ export class EmitEventService {
   ) {}
 
   async execute({ message, queue }: IEventPayload) {
-    return this.client.emit(queue, message);
+    return this.client.send(queue, message);
   }
 }
